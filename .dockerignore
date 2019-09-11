@@ -1,0 +1,6 @@
+node_modules/
+coverage/
+.vscode/
+.env.example
+README.md
+npm-debug.log
