@@ -24,6 +24,7 @@ script:
   - npm run test
   - docker build --build-arg PORT=3000 --tag agmdev/sazed-api:latest .
   - docker tag agmdev/sazed-api registry.heroku.com/$HEROKU_APP/web
+  - npm run test:coverage
 
 deploy:
   provider: script
