@@ -53,6 +53,7 @@
   "dependencies": {
     "dotenv-safe": "^8.1.0",
     "http-status": "^1.4.0",
+    "mongoose": "^5.7.4",
     "noswbi": "^0.4.0"
   }
 }
