@@ -4,9 +4,13 @@ require("dotenv-safe").config({
   example: join(__dirname, "..", "..", ".env.example")
 });
 
+const environment = process.env.NODE_ENV || "development";
+
 module.exports = {
-  environment: process.env.NODE_ENV || "development",
+  environment,
   port: process.env.PORT || 3000,
+  mongo:
+    environment === "test" ? process.env.MONGO_URI_TEST : process.env.MONGO_URI,
   serverOptions: {
     allowCors: true,
     forceJsonResponse: true,
@@ -23,5 +27,11 @@ module.exports = {
       loginRedirection: "http://localhost:3000/api/"
       // userModel: User
     }
+  },
+  mongooseOptions: {
+    keepAlive: true, // default since mongoose 5.2.0
+    useNewUrlParser: true, // to avoid deprecation warning on mongoose 5.x
+    useCreateIndex: true, // to avoid collection.ensureIndex deprecation warning
+    useUnifiedTopology: true // new server discover and monitoring engine
   }
 };
