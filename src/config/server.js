@@ -5,12 +5,12 @@ const router = require('../routes/index');
 const app = express();
 
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.use('/', router);
 
-app.get('/status', (req, res) => {
-  res.json({ status: 'OK' });
+// handler
+app.use((error, req, res, next) => {
+  res.json({ status: 500, error: error.message });
 });
 
 
