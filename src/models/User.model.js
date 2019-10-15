@@ -41,14 +41,16 @@ const schema = mongoose.Schema({
  * user info on social login success
  */
 schema.statics.findOrCreate = async function findOrCreate(userData) {
-  // TODO: try without self=this
   const self = this;
   const user = await self.findOne({ id: userData.id });
   if (user) {
     return user;
   }
-  // TODO: add here if it's the first user on database, make it admin {...userData: admin: true}
-  const newUser = await self.create(userData);
+
+  const numberOfUsers = await self.countDocuments({});
+
+  const newUserData = Object.assign(userData, { admin: !numberOfUsers });
+  const newUser = await self.create(newUserData);
   return newUser;
 };
 

@@ -4,6 +4,8 @@ require("dotenv-safe").config({
   example: join(__dirname, "..", "..", ".env.example")
 });
 
+const User = require("../models/User.model");
+
 const environment = process.env.NODE_ENV || "development";
 
 module.exports = {
@@ -24,8 +26,8 @@ module.exports = {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_SECRET
       },
-      loginRedirection: "http://localhost:3000/api/"
-      // userModel: User
+      loginRedirection: "http://localhost:3000/api/",
+      userModel: User
     }
   },
   mongooseOptions: {
