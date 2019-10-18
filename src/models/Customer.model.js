@@ -14,7 +14,7 @@ const schema = mongoose.Schema({
     index: true,
     unique: true
   },
-  firtname: {
+  firstname: {
     type: String,
     required: true,
     lowercase: true,
