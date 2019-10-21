@@ -26,5 +26,21 @@ exports.addCustomer = async (req, res) => {
     error: "Something went wrong :/"
   });
 };
-exports.updateCustomer = async () => {};
-exports.removeCustomer = async () => {};
+
+exports.updateCustomer = async (req, res) => {
+  const { id } = req.params;
+  const customerData = req.body;
+  const customer = await customerDomain.update(id, customerData);
+  if (customer) {
+    return res.status(httpStatus.OK).json(customer);
+  }
+  return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+    error: "Something went wrong D:"
+  });
+};
+
+exports.removeCustomer = async (req, res) => {
+  const { id } = req.params;
+  await customerDomain.delete(id);
+  return res.status(httpStatus.NO_CONTENT);
+};
