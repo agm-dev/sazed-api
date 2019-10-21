@@ -39,6 +39,13 @@ const schema = mongoose.Schema({
   phone: {
     type: Number
   },
+  birthdate: {
+    type: Date
+  },
+  LGPD: {
+    type: Boolean,
+    default: false
+  },
   notes: {
     type: String,
     default: "",
