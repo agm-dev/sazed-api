@@ -26,6 +26,11 @@ const schema = mongoose.Schema({
     type: Boolean,
     default: false
   },
+  // the admin has to validate the user to be able to access
+  validated: {
+    type: Boolean,
+    default: false
+  },
   created: {
     type: Date,
     default: Date.now
