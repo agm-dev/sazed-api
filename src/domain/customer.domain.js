@@ -36,10 +36,10 @@ exports.update = async (id, customerData) => {
   return updatedCustomer && updatedCustomer.nif ? updatedCustomer : null;
 };
 
-exports.delete = async id => {
+exports.delete = id => {
   debug(`delete customer ${id}`);
   if (typeof id !== "string" || !id.length) {
     throw new Error("delete customer requires an id");
   }
-  return Customer.deleteOne({ _id: id });
+  return Customer.deleteOne({ _id: id }).then(res => res.deletedCount);
 };

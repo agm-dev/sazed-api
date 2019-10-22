@@ -41,6 +41,9 @@ exports.updateCustomer = async (req, res) => {
 
 exports.removeCustomer = async (req, res) => {
   const { id } = req.params;
-  await customerDomain.delete(id);
-  return res.status(httpStatus.NO_CONTENT);
+  const deletedCount = await customerDomain.delete(id);
+  if (deletedCount === 1) {
+    return res.status(httpStatus.NO_CONTENT).send();
+  }
+  return res.status(httpStatus.NOT_FOUND).send();
 };
