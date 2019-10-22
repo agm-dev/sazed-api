@@ -6,6 +6,7 @@ module.exports = {
   },
   extends: [
     'airbnb-base',
+    'plugin:prettier/recommended',
   ],
   globals: {
     Atomics: 'readonly',
@@ -15,6 +16,10 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
+  plugins: [
+    'prettier',
+  ],
   rules: {
+    'prettier/prettier': 'error',
   },
 }
