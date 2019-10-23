@@ -13,7 +13,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "populate:fake": "node scripts/populate-db-with-fake-data.js"
   },
   "author": "Adrián Gonzalo",
   "license": "GPL-3.0",
