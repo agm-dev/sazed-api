@@ -12,10 +12,15 @@ exports.getSessionById = async (req, res) => {
   res.status(status).json(item || {});
 };
 
-exports.addSession = async (req, res) => {
-  const item = await domain.add(req.body);
-  const status = item ? httpStatus.CREATED : httpStatus.INTERNAL_SERVER_ERROR;
-  res.status(status).json(item || {});
+exports.addSession = async (req, res, next) => {
+  try {
+    const item = await domain.add(req.body);
+    const status = item ? httpStatus.CREATED : httpStatus.INTERNAL_SERVER_ERROR;
+    res.status(status).json(item || {});
+  } catch (err) {
+    console.log(err.message);
+    next(err);
+  }
 };
 
 exports.updateSession = async (req, res) => {

@@ -1,4 +1,4 @@
-const debug = require("debug")("model:customer");
+const debug = require("debug")("domain:customer");
 const Customer = require("../models/Customer.model");
 
 exports.get = async () => {
