@@ -18,7 +18,7 @@ exports.getCustomerById = async (req, res) => {
 
 exports.addCustomer = async (req, res) => {
   const customerData = req.body;
-  const customer = await customerDomain.add(customerData);
+  const customer = await customerDomain.add(customerData, req.user);
   if (customer) {
     return res.status(httpStatus.CREATED).json(customer);
   }
