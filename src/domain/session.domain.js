@@ -8,6 +8,8 @@ exports.get = async (id = null) => {
   return id ? results[0] || {} : results;
 };
 
+// TODO: user util/Query to do the querys
+
 exports.add = async data => {
   debug("add data: %O", data);
   const session = new Session(data);

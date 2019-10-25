@@ -18,7 +18,6 @@ exports.addSession = async (req, res, next) => {
     const status = item ? httpStatus.CREATED : httpStatus.INTERNAL_SERVER_ERROR;
     res.status(status).json(item || {});
   } catch (err) {
-    console.log(err.message);
     next(err);
   }
 };
