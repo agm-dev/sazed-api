@@ -3,6 +3,7 @@
 const dummy = require("mongoose-dummy");
 const { connectToDatabase, disconnectDatabase } = require("../src/config/db");
 const Customer = require("../src/models/Customer.model");
+const Log = require("../src/models/Log.model");
 
 function cleanCollection(Model) {
   return Model.deleteMany({});
@@ -26,7 +27,7 @@ function generateDummyDocuments(Model, n = 10) {
   });
 }
 
-const models = [Customer];
+const models = [Customer, Log];
 
 (async () => {
   try {
