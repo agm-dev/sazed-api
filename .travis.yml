@@ -2,7 +2,8 @@ sudo: required
 
 language: node_js
 node_js:
-  - "stable"
+  - v12
+  - v10
 services:
   - docker
 cache:
