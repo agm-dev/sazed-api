@@ -18,3 +18,7 @@ exports.connectToDatabase = function connectToDatabase() {
     });
   });
 };
+
+exports.disconnectDatabase = function disconnectDatabase() {
+  return mongoose.connection.close();
+};

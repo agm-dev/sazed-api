@@ -1,5 +1,6 @@
-const debug = require("debug")("model:customer");
+const debug = require("debug")("domain:customer");
 const Customer = require("../models/Customer.model");
+const { log } = require("../utils/logger");
 
 exports.get = async () => {
   const customers = await Customer.find({});
@@ -16,11 +17,16 @@ exports.getById = async id => {
   return customer && customer.nif ? customer : null;
 };
 
-exports.add = async customerData => {
+exports.add = async (customerData, user) => {
   debug("add customerData: %O", customerData);
   const customer = new Customer(customerData);
   await customer.save();
   debug("add added customer: %O", customer);
+  log(
+    `${user.name} has added ${customer.firstname} ${customer.lastname} as new customer`,
+    // eslint-disable-next-line no-underscore-dangle
+    { userId: user.id, customerId: customer._id }
+  );
   return customer && customer.nif ? customer : null;
 };
 
