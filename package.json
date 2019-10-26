@@ -59,5 +59,10 @@
     "joi": "^14.3.1",
     "mongoose": "^5.7.7",
     "noswbi": "0.5.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
   }
 }
