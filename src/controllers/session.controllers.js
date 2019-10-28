@@ -29,7 +29,7 @@ exports.updateSession = async (req, res) => {
 };
 
 exports.removeSession = async (req, res) => {
-  const nRemoved = await domain.delete(req.params.id);
-  const status = nRemoved === 1 ? httpStatus.NO_CONTENT : httpStatus.NOT_FOUND;
+  const removed = await domain.delete(req.params.id);
+  const status = removed ? httpStatus.NO_CONTENT : httpStatus.NOT_FOUND;
   res.status(status).send();
 };

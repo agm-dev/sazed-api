@@ -1,36 +1,31 @@
 const debug = require("debug")("domain:session");
 const Session = require("../models/Session.model");
+const Query = require("../utils/Query");
+
+const query = new Query(Session);
 
 exports.get = async (id = null) => {
-  const query = id ? { _id: id } : {};
-  const results = await Session.find(query);
-  debug("get: %O", results);
-  return id ? results[0] || {} : results;
+  const result = await query.get(id);
+  debug("get: %O", result);
+  return result;
 };
-
-// TODO: user util/Query to do the querys
 
 exports.add = async data => {
   debug("add data: %O", data);
-  const session = new Session(data);
-  await session.save();
-  debug("added session: %O", session);
-  // eslint-disable-next-line no-underscore-dangle
-  return session && session._id ? session : null;
+  const result = await query.add(data);
+  debug("added session: %O", result);
+  return result;
 };
 
 exports.update = async (id, data) => {
   debug(`update session ${id} with data: %O`, data);
-  const session = await Session.findOne({ _id: id });
-  const updated = Object.assign(session, data);
-  await session.save();
-  debug("updated session: %O", updated);
-  // eslint-disable-next-line no-underscore-dangle
-  return updated && updated._id ? updated : null;
+  const result = await query.update(id, data);
+  debug("updated session: %O", result);
+  return result;
 };
 
 exports.delete = async id => {
   debug(`delete session ${id}`);
-  const result = await Session.deleteOne({ _id: id });
-  return result.deletedCount;
+  const result = await query.delete(id);
+  return result;
 };
