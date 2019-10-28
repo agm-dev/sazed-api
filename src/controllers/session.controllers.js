@@ -14,7 +14,7 @@ exports.getSessionById = async (req, res) => {
 
 exports.addSession = async (req, res, next) => {
   try {
-    const item = await domain.add(req.body);
+    const item = await domain.add(req.body, req.user);
     const status = item ? httpStatus.CREATED : httpStatus.INTERNAL_SERVER_ERROR;
     res.status(status).json(item || {});
   } catch (err) {
@@ -23,13 +23,13 @@ exports.addSession = async (req, res, next) => {
 };
 
 exports.updateSession = async (req, res) => {
-  const item = await domain.update(req.params.id, req.body);
+  const item = await domain.update(req.params.id, req.body, req.user);
   const status = item ? httpStatus.OK : httpStatus.INTERNAL_SERVER_ERROR;
   res.status(status).json(item || {});
 };
 
 exports.removeSession = async (req, res) => {
-  const removed = await domain.delete(req.params.id);
+  const removed = await domain.delete(req.params.id, req.user);
   const status = removed ? httpStatus.NO_CONTENT : httpStatus.NOT_FOUND;
   res.status(status).send();
 };
