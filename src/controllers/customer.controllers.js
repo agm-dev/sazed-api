@@ -30,7 +30,7 @@ exports.addCustomer = async (req, res) => {
 exports.updateCustomer = async (req, res) => {
   const { id } = req.params;
   const customerData = req.body;
-  const customer = await customerDomain.update(id, customerData);
+  const customer = await customerDomain.update(id, customerData, req.user);
   if (customer) {
     return res.status(httpStatus.OK).json(customer);
   }
@@ -41,7 +41,7 @@ exports.updateCustomer = async (req, res) => {
 
 exports.removeCustomer = async (req, res) => {
   const { id } = req.params;
-  const deletedCount = await customerDomain.delete(id);
+  const deletedCount = await customerDomain.delete(id, req.user);
   if (deletedCount === 1) {
     return res.status(httpStatus.NO_CONTENT).send();
   }
