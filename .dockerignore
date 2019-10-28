@@ -1,0 +1,8 @@
+# Ignore everything
+**
+
+# Allow only required stuff
+!package.json
+!index.js
+!src/**
+!.env.example

@@ -1,0 +1,46 @@
+sudo: required
+
+language: node_js
+node_js:
+  - v12
+  - v10
+services:
+  - docker
+cache:
+  directories:
+    - "node_modules"
+env:
+- PORT=3000
+- GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+- GOOGLE_SECRET=$GOOGLE_SECRET
+- DOMAIN=https://sazed.herokuapp.com
+- JWT_SECRET=secretfortesting
+- JWT_ISSUER=http://localhost
+- JWT_AUDIENCE=http://localhost
+- MONGO_URI_TEST=$MONGO_URI_TEST
+- MONGO_URI=$MONGO_URI
+
+before_install:
+  - curl https://cli-assets.heroku.com/install.sh | sh
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - echo "$HEROKU_API_KEY" | docker login -u "$HEROKU_USERNAME" --password-stdin registry.heroku.com
+
+install:
+  - npm install
+
+script:
+  - npm run lint
+  - npm run test
+  - docker build --build-arg PORT=3000 --tag agmdev/sazed-api:latest .
+  - docker tag agmdev/sazed-api registry.heroku.com/$HEROKU_APP/web
+  - npm run test:coverage
+
+deploy:
+  provider: script
+  script:
+    docker push agmdev/sazed-api;
+    docker push registry.heroku.com/$HEROKU_APP/web;
+    heroku container:release web --app $HEROKU_APP
+  on:
+    branch: master
+    tags: true
