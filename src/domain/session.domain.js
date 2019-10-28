@@ -4,6 +4,7 @@ const Query = require("../utils/Query");
 const { log } = require("../utils/logger");
 
 const query = new Query(Session);
+const locale = "es";
 
 exports.get = async (id = null) => {
   const result = await query.get(id);
@@ -16,9 +17,9 @@ exports.add = async (data, user) => {
   const result = await query.add(data);
   debug("added session: %O", result);
   log(
-    `${
-      user.name
-    } has added a new session for ${result.date.toLocaleDateString()} at ${result.date.toLocaleTimeString()} with ${
+    `${user.name} has added a new session for ${result.date.toLocaleDateString(
+      locale
+    )} at ${result.date.toLocaleTimeString(locale)} with ${
       result.customer.name
     }`,
     // eslint-disable-next-line no-underscore-dangle
@@ -32,9 +33,9 @@ exports.update = async (id, data, user) => {
   const result = await query.update(id, data);
   debug("updated session: %O", result);
   log(
-    `${
-      user.name
-    } has updated session for ${result.date.toLocaleDateString()} at ${result.date.toLocaleTimeString()} with ${
+    `${user.name} has updated session for ${result.date.toLocaleDateString(
+      locale
+    )} at ${result.date.toLocaleTimeString(locale)} with ${
       result.customer.name
     } to these values: ${JSON.stringify(data)}`,
     // eslint-disable-next-line no-underscore-dangle
@@ -46,9 +47,11 @@ exports.update = async (id, data, user) => {
 exports.delete = async (id, user) => {
   debug(`delete session ${id}`);
   const result = await query.delete(id);
-  log(`${user.name} has deleted session ${id}`, {
-    userId: user.id,
-    sessionId: id
-  });
+  if (result) {
+    log(`${user.name} has deleted session ${id}`, {
+      userId: user.id,
+      sessionId: id
+    });
+  }
   return result;
 };
