@@ -55,7 +55,10 @@ schema.statics.findOrCreate = async function findOrCreate(userData) {
 
   const numberOfUsers = await self.countDocuments({});
 
-  const newUserData = Object.assign(userData, { admin: !numberOfUsers });
+  const newUserData = Object.assign(userData, {
+    admin: !numberOfUsers,
+    validated: !numberOfUsers
+  });
   const newUser = await self.create(newUserData);
   log(
     `A new user (${newUser.name}) has been created as ${

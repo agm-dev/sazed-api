@@ -1,5 +1,5 @@
 const { createRouter } = require("noswbi");
-const { isAdmin } = require("../utils/middlewares");
+const { isAdmin, isValidatedUser } = require("../utils/middlewares");
 const {
   getCustomers,
   getCustomerById,
@@ -11,10 +11,20 @@ const { catchErrors } = require("../utils/handlers");
 
 const router = createRouter({ requireAuth: true });
 
-router.get("/customer", catchErrors(getCustomers));
-router.get("/customer/:id", catchErrors(getCustomerById));
-router.post("/customer", isAdmin, catchErrors(addCustomer));
-router.put("/customer/:id", isAdmin, catchErrors(updateCustomer));
-router.delete("/customer/:id", isAdmin, catchErrors(removeCustomer));
+router.get("/customer", isValidatedUser, catchErrors(getCustomers));
+router.get("/customer/:id", isValidatedUser, catchErrors(getCustomerById));
+router.post("/customer", isValidatedUser, isAdmin, catchErrors(addCustomer));
+router.put(
+  "/customer/:id",
+  isValidatedUser,
+  isAdmin,
+  catchErrors(updateCustomer)
+);
+router.delete(
+  "/customer/:id",
+  isValidatedUser,
+  isAdmin,
+  catchErrors(removeCustomer)
+);
 
 module.exports = router;
