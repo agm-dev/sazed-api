@@ -5,6 +5,12 @@ const { log } = require("../utils/logger");
 
 const query = new Query(User);
 
+exports.get = async (id = null) => {
+  const result = await query.get(id);
+  debug("get: %O", result);
+  return result;
+};
+
 exports.validateUser = async (id, user) => {
   debug(`validate user ${id}`);
   const result = await query.update(id, { validated: true });

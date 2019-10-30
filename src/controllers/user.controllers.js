@@ -8,6 +8,11 @@ exports.getUserInfoController = (req, res, next) => {
   return res.status(httpStatus.OK).json(req.user);
 };
 
+exports.getUsersController = async (req, res) => {
+  const result = await domain.get();
+  res.status(httpStatus.OK).json(result);
+};
+
 exports.validateUserController = async (req, res) => {
   const result = await domain.validateUser(req.params.id, req.user);
   const status = result
