@@ -14,3 +14,13 @@ exports.validateUser = async (id, user) => {
   });
   return result && result.validated;
 };
+
+exports.disableUser = async (id, user) => {
+  debug(`disable user ${id}`);
+  const result = await query.update(id, { validated: false });
+  debug("updated user: %O", result);
+  log(`${user.name} has disabled user ${result.name} (${id})`, {
+    userId: user.id
+  });
+  return result && !result.validated;
+};

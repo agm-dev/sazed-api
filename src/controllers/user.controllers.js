@@ -15,3 +15,14 @@ exports.validateUserController = async (req, res) => {
     : httpStatus.INTERNAL_SERVER_ERROR;
   res.status(status).send();
 };
+
+exports.disableUserController = async (req, res) => {
+  const result = await domain.disableUser(req.params.id, req.user);
+  // TODO: all these internal server error are not right
+  // I should use another http code, probably a 400's one
+  // check it and change everywhere
+  const status = result
+    ? httpStatus.NO_CONTENT
+    : httpStatus.INTERNAL_SERVER_ERROR;
+  res.status(status).send();
+};
