@@ -5,7 +5,9 @@ const Query = require("../utils/Query");
 const query = new Query(Log);
 
 exports.get = async (id = null) => {
-  const result = await query.get(id);
+  const queryString = id ? { _id: id } : {};
+  const results = await Log.find(queryString).sort({ created: -1 });
+  const result = id ? results[0] || {} : results;
   debug("get: %O", result);
   return result;
 };
