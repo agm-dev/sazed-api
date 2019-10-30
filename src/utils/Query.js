@@ -1,3 +1,6 @@
+const debug = require("debug")("utils:query");
+const { defaultQuerySort, defaultQueryLimit } = require("../config/vars");
+
 class Query {
   constructor(Model) {
     if (!Model) {
@@ -6,9 +9,21 @@ class Query {
     this.Model = Model;
   }
 
-  async get(id = null) {
+  async get(id = null, options) {
     const query = id ? { _id: id } : {};
-    const results = await this.Model.find(query);
+    const sort = options.sort || defaultQuerySort;
+    const skip = options.skip || 0;
+    const limit = options.limit || defaultQueryLimit;
+
+    debug(
+      `get sorted by %O, skip ${skip} results and limited to ${limit} results`,
+      sort
+    );
+
+    const results = await this.Model.find(query)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit);
     return id ? results[0] || {} : results;
   }
 
