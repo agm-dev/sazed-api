@@ -22,11 +22,25 @@ class Query {
       sort
     );
 
-    const results = await this.Model.find(query)
+    const resultsQuery = this.Model.find(query)
       .sort(sort)
       .skip(Number(skip))
       .limit(Number(limit));
-    return id ? results[0] || {} : results;
+
+    const countQuery = this.Model.countDocuments({});
+
+    const [results, count] = await Promise.all([resultsQuery, countQuery]);
+
+    const data = id ? results[0] || {} : results;
+
+    return {
+      metadata: {
+        skip: Number(skip),
+        limit: Number(limit),
+        total: count
+      },
+      data
+    };
   }
 
   async add(data) {
