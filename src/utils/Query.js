@@ -24,8 +24,8 @@ class Query {
 
     const results = await this.Model.find(query)
       .sort(sort)
-      .skip(skip)
-      .limit(limit);
+      .skip(Number(skip))
+      .limit(Number(limit));
     return id ? results[0] || {} : results;
   }
 
