@@ -1,5 +1,7 @@
 const debug = require("debug")("utils:query");
-const { defaultQuerySort, defaultQueryLimit } = require("../config/vars");
+
+const defaultQuerySort = { created: 1 };
+const defaultQueryLimit = 10;
 
 class Query {
   constructor(Model) {

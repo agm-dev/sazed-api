@@ -36,7 +36,5 @@ module.exports = {
     useNewUrlParser: true, // to avoid deprecation warning on mongoose 5.x
     useCreateIndex: true, // to avoid collection.ensureIndex deprecation warning
     useUnifiedTopology: true // new server discover and monitoring engine
-  },
-  defaultQuerySort: { created: 1 },
-  defaultQueryLimit: 10
+  }
 };
