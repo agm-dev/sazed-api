@@ -11,7 +11,7 @@ class Query {
     this.Model = Model;
   }
 
-  async get(id = null, options) {
+  async get(id = null, options = {}) {
     const query = id ? { _id: id } : {};
     const sort = options.sort || defaultQuerySort;
     const skip = options.skip || 0;
@@ -27,7 +27,7 @@ class Query {
       .skip(Number(skip))
       .limit(Number(limit));
 
-    const countQuery = this.Model.countDocuments({});
+    const countQuery = this.Model.countDocuments(query);
 
     const [results, count] = await Promise.all([resultsQuery, countQuery]);
 

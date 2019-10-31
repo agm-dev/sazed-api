@@ -1,20 +1,17 @@
 const debug = require("debug")("domain:customer");
 const Customer = require("../models/Customer.model");
+const Query = require("../utils/Query");
 const { log } = require("../utils/logger");
 
-exports.get = async () => {
-  const customers = await Customer.find({});
+const query = new Query(Customer);
+
+exports.get = async (id = null, options = {}) => {
+  const customers = await query.get(id, {
+    sort: { firstname: 1, lastname: 1 },
+    ...options
+  });
   debug(`get: %O`, customers);
   return customers;
-};
-
-exports.getById = async id => {
-  if (typeof id !== "string" || !id.length) {
-    throw new Error("get customer by id requires an id");
-  }
-  const customer = await Customer.findOne({ _id: id }); // TODO: check if is better to use a uuid as id, instead of mongoone, NIF would be public in the url, so better not..
-  debug(`getById (${id}): %O`, customer);
-  return customer && customer.nif ? customer : null;
 };
 
 exports.add = async (customerData, user) => {
