@@ -1,36 +1,57 @@
 const debug = require("debug")("domain:session");
 const Session = require("../models/Session.model");
+const Query = require("../utils/Query");
+const { log } = require("../utils/logger");
+
+const query = new Query(Session);
+const locale = "es";
 
 exports.get = async (id = null) => {
-  const query = id ? { _id: id } : {};
-  const results = await Session.find(query);
-  debug("get: %O", results);
-  return id ? results[0] || {} : results;
+  const result = await query.get(id);
+  debug("get: %O", result);
+  return result;
 };
 
-// TODO: user util/Query to do the querys
-
-exports.add = async data => {
+exports.add = async (data, user) => {
   debug("add data: %O", data);
-  const session = new Session(data);
-  await session.save();
-  debug("added session: %O", session);
-  // eslint-disable-next-line no-underscore-dangle
-  return session && session._id ? session : null;
+  const result = await query.add(data);
+  debug("added session: %O", result);
+  log(
+    `${user.name} has added a new session for ${result.date.toLocaleDateString(
+      locale
+    )} at ${result.date.toLocaleTimeString(locale)} with ${
+      result.customer.name
+    }`,
+    // eslint-disable-next-line no-underscore-dangle
+    { userId: user.id, sessionId: result._id }
+  );
+  return result;
 };
 
-exports.update = async (id, data) => {
+exports.update = async (id, data, user) => {
   debug(`update session ${id} with data: %O`, data);
-  const session = await Session.findOne({ _id: id });
-  const updated = Object.assign(session, data);
-  await session.save();
-  debug("updated session: %O", updated);
-  // eslint-disable-next-line no-underscore-dangle
-  return updated && updated._id ? updated : null;
+  const result = await query.update(id, data);
+  debug("updated session: %O", result);
+  log(
+    `${user.name} has updated session for ${result.date.toLocaleDateString(
+      locale
+    )} at ${result.date.toLocaleTimeString(locale)} with ${
+      result.customer.name
+    } to these values: ${JSON.stringify(data)}`,
+    // eslint-disable-next-line no-underscore-dangle
+    { userId: user.id, sessionId: result._id }
+  );
+  return result;
 };
 
-exports.delete = async id => {
+exports.delete = async (id, user) => {
   debug(`delete session ${id}`);
-  const result = await Session.deleteOne({ _id: id });
-  return result.deletedCount;
+  const result = await query.delete(id);
+  if (result) {
+    log(`${user.name} has deleted session ${id}`, {
+      userId: user.id,
+      sessionId: id
+    });
+  }
+  return result;
 };

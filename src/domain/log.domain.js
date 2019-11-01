@@ -4,8 +4,11 @@ const Query = require("../utils/Query");
 
 const query = new Query(Log);
 
-exports.get = async (id = null) => {
-  const result = await query.get(id);
+exports.get = async (id = null, options = {}) => {
+  const result = await query.get(id, {
+    sort: { created: -1 },
+    ...options
+  });
   debug("get: %O", result);
   return result;
 };

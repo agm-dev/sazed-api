@@ -22,7 +22,7 @@ module.exports = {
       jwtSecret: process.env.JWT_SECRET,
       issuer: process.env.JWT_ISSUER,
       audience: process.env.JWT_AUDIENCE,
-      payloadFields: ["id", "name", "email", "admin"],
+      payloadFields: ["id", "name", "email", "admin", "validated"],
       google: {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_SECRET

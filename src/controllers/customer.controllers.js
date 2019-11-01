@@ -1,24 +1,23 @@
 const httpStatus = require("http-status");
-const customerDomain = require("../domain/customer.domain");
+const domain = require("../domain/customer.domain");
+const { getQueryOptions } = require("../utils/handlers");
 
 // make this one?
 exports.getCustomers = async (req, res) => {
-  const customers = await customerDomain.get();
+  const customers = await domain.get(null, getQueryOptions(req.query));
   res.status(httpStatus.OK).json(customers);
 };
 
 exports.getCustomerById = async (req, res) => {
   const { id } = req.params;
-  const customer = await customerDomain.getById(id);
-  if (customer) {
-    return res.status(httpStatus.OK).json(customer);
-  }
-  return res.status(httpStatus.NOT_FOUND).json({});
+  const customers = await domain.get(id, getQueryOptions(req.query));
+  const status = customers.data.nif ? httpStatus.OK : httpStatus.NOT_FOUND;
+  res.status(status).json(customers);
 };
 
 exports.addCustomer = async (req, res) => {
   const customerData = req.body;
-  const customer = await customerDomain.add(customerData, req.user);
+  const customer = await domain.add(customerData, req.user);
   if (customer) {
     return res.status(httpStatus.CREATED).json(customer);
   }
@@ -30,7 +29,7 @@ exports.addCustomer = async (req, res) => {
 exports.updateCustomer = async (req, res) => {
   const { id } = req.params;
   const customerData = req.body;
-  const customer = await customerDomain.update(id, customerData);
+  const customer = await domain.update(id, customerData, req.user);
   if (customer) {
     return res.status(httpStatus.OK).json(customer);
   }
@@ -41,7 +40,7 @@ exports.updateCustomer = async (req, res) => {
 
 exports.removeCustomer = async (req, res) => {
   const { id } = req.params;
-  const deletedCount = await customerDomain.delete(id);
+  const deletedCount = await domain.delete(id, req.user);
   if (deletedCount === 1) {
     return res.status(httpStatus.NO_CONTENT).send();
   }
