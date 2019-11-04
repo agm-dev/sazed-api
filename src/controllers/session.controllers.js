@@ -1,13 +1,14 @@
 const httpStatus = require("http-status");
 const domain = require("../domain/session.domain");
+const { getQueryOptions } = require("../utils/handlers");
 
 exports.getSessions = async (req, res) => {
-  const items = await domain.get();
+  const items = await domain.get(null, getQueryOptions(req.query));
   res.status(httpStatus.OK).json(items);
 };
 
 exports.getSessionById = async (req, res) => {
-  const item = await domain.get(req.params.id);
+  const item = await domain.get(req.params.id, getQueryOptions(req.query));
   const status = item ? httpStatus.OK : httpStatus.NOT_FOUND;
   res.status(status).json(item || {});
 };

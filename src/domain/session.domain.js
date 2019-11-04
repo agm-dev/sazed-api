@@ -6,8 +6,11 @@ const { log } = require("../utils/logger");
 const query = new Query(Session);
 const locale = "es";
 
-exports.get = async (id = null) => {
-  const result = await query.get(id);
+exports.get = async (id = null, options = {}) => {
+  const result = await query.get(id, {
+    sort: { date: -1 },
+    ...options
+  });
   debug("get: %O", result);
   return result;
 };
