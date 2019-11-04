@@ -69,4 +69,11 @@ schema.statics.findOrCreate = async function findOrCreate(userData) {
   return newUser;
 };
 
+schema.methods.toJSON = function() {
+  const obj = this.toObject();
+  // eslint-disable-next-line no-underscore-dangle
+  delete obj.__v;
+  return obj;
+};
+
 module.exports = mongoose.model("User", schema);
