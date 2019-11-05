@@ -7,24 +7,28 @@ const {
   updateCustomer,
   removeCustomer
 } = require("../controllers/customer.controllers");
+const {
+  validateAddCustomer,
+  validateUpdateCustomer
+} = require("../validations/customer.validation");
 const { catchErrors } = require("../utils/handlers");
 
 const router = createRouter({ requireAuth: true });
 
 router.get("/customer", isValidatedUser, catchErrors(getCustomers));
 router.get("/customer/:id", isValidatedUser, catchErrors(getCustomerById));
-router.post("/customer", isValidatedUser, isAdmin, catchErrors(addCustomer));
+router.post(
+  "/customer",
+  isAdmin,
+  validateAddCustomer,
+  catchErrors(addCustomer)
+);
 router.put(
   "/customer/:id",
-  isValidatedUser,
   isAdmin,
+  validateUpdateCustomer,
   catchErrors(updateCustomer)
 );
-router.delete(
-  "/customer/:id",
-  isValidatedUser,
-  isAdmin,
-  catchErrors(removeCustomer)
-);
+router.delete("/customer/:id", isAdmin, catchErrors(removeCustomer));
 
 module.exports = router;
