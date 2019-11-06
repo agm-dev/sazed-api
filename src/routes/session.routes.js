@@ -1,6 +1,5 @@
 const { createRouter } = require("noswbi");
-// const { isOwner } = require("../utils/middlewares");
-const { isValidatedUser } = require("../utils/middlewares");
+const { isValidatedUser, isOwner } = require("../utils/middlewares");
 const { catchErrors } = require("../utils/handlers");
 const {
   getSessions,
@@ -26,16 +25,20 @@ router.post(
   validateAddSession,
   catchErrors(addSession)
 );
-// router.put("/session/:id", catchErrors(isOwner), catchErrors(updateSession));
 
 router.put(
   "/session/:id",
   isValidatedUser,
+  catchErrors(isOwner),
   validateUpdateSession,
   catchErrors(updateSession)
 );
-// router.delete("/session/:id", catchErrors(isOwner), catchErrors(removeSession));
 
-router.delete("/session/:id", isValidatedUser, catchErrors(removeSession));
+router.delete(
+  "/session/:id",
+  isValidatedUser,
+  catchErrors(isOwner),
+  catchErrors(removeSession)
+);
 
 module.exports = router;
