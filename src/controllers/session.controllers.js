@@ -15,7 +15,13 @@ exports.getSessionById = async (req, res) => {
 
 exports.addSession = async (req, res, next) => {
   try {
-    const item = await domain.add(req.body, req.user);
+    const item = await domain.add(
+      {
+        owner: req.user.id,
+        ...req.body
+      },
+      req.user
+    );
     const status = item ? httpStatus.CREATED : httpStatus.INTERNAL_SERVER_ERROR;
     res.status(status).json(item || {});
   } catch (err) {

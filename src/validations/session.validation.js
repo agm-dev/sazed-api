@@ -6,9 +6,6 @@ const addSessionSchema = Joi.object({
     .trim()
     .isoDate()
     .required(),
-  owner: Joi.string()
-    .trim()
-    .required(),
   customer: Joi.object({
     nif: Joi.string()
       .trim()
