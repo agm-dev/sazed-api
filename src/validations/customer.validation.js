@@ -1,4 +1,5 @@
 const Joi = require("@hapi/joi");
+const { validator } = require("../utils/handlers");
 
 const addCustomerSchema = Joi.object({
   nif: Joi.string()
@@ -60,16 +61,6 @@ const updateCustomerSchema = Joi.object({
     .trim()
     .max(10000)
 });
-
-const validator = (schema, type) => (req, res, next) => {
-  // const { error, value } = addCustomerSchema.validate(req[type]); // FIXME: pass value to the controller?!
-  const { error } = addCustomerSchema.validate(req[type]);
-  if (error) {
-    return next(error);
-  }
-  // TODO: add the value to req and then use it on addCustomerController??
-  return next();
-};
 
 module.exports = {
   validateAddCustomer: validator(addCustomerSchema, "body"),
