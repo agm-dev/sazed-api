@@ -24,6 +24,7 @@ const schema = mongoose.Schema({
   }
 });
 
+// eslint-disable-next-line func-names
 schema.methods.toJSON = function() {
   const obj = this.toObject();
   // eslint-disable-next-line no-underscore-dangle
