@@ -52,7 +52,7 @@ class Query {
 
   async update(id, data) {
     const item = await this.Model.findOne({ _id: id });
-    const updatedItem = Object.assign(item, data);
+    const updatedItem = Object.assign(item, data, { updated: Date.now() });
     await updatedItem.save();
     // eslint-disable-next-line no-underscore-dangle
     return updatedItem && updatedItem._id ? updatedItem : null;

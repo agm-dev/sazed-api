@@ -53,12 +53,12 @@
     "nodejs"
   ],
   "dependencies": {
+    "@hapi/joi": "^16.1.7",
     "debug": "^4.1.1",
     "dotenv-safe": "^8.1.0",
     "http-status": "^1.4.0",
-    "joi": "^14.3.1",
     "mongoose": "^5.7.7",
-    "noswbi": "0.5.0"
+    "noswbi": "0.6.1"
   },
   "jest": {
     "collectCoverageFrom": [

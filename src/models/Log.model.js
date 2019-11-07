@@ -24,4 +24,14 @@ const schema = mongoose.Schema({
   }
 });
 
+// eslint-disable-next-line func-names
+schema.methods.toJSON = function() {
+  const obj = this.toObject();
+  // eslint-disable-next-line no-underscore-dangle
+  delete obj.__v;
+  // eslint-disable-next-line no-underscore-dangle
+  delete obj._id;
+  return obj;
+};
+
 module.exports = mongoose.model("Log", schema);

@@ -8,12 +8,6 @@ const schema = mongoose.Schema({
     unique: true,
     required: true
   },
-  slug: {
-    type: String,
-    trim: true,
-    index: true,
-    unique: true
-  },
   firstname: {
     type: String,
     required: true,
@@ -60,5 +54,17 @@ const schema = mongoose.Schema({
     default: Date.now
   }
 });
+
+// eslint-disable-next-line func-names
+schema.methods.toJSON = function() {
+  const obj = this.toObject();
+  // eslint-disable-next-line no-underscore-dangle
+  delete obj.__v;
+  // eslint-disable-next-line no-underscore-dangle
+  obj.id = obj._id;
+  // eslint-disable-next-line no-underscore-dangle
+  delete obj._id;
+  return obj;
+};
 
 module.exports = mongoose.model("Customer", schema);

@@ -1,6 +1,5 @@
 const { createRouter } = require("noswbi");
-// const { isOwner } = require("../utils/middlewares");
-const { isValidatedUser } = require("../utils/middlewares");
+const { isValidatedUser, isOwner } = require("../utils/middlewares");
 const { catchErrors } = require("../utils/handlers");
 const {
   getSessions,
@@ -9,15 +8,37 @@ const {
   updateSession,
   removeSession
 } = require("../controllers/session.controllers");
+const {
+  validateAddSession,
+  validateUpdateSession
+} = require("../validations/session.validation");
 
 const router = createRouter({ requireAuth: true });
 
 router.get("/session", isValidatedUser, catchErrors(getSessions));
+
 router.get("/session/:id", isValidatedUser, catchErrors(getSessionById));
-router.post("/session", isValidatedUser, catchErrors(addSession));
-// router.put("/session/:id", catchErrors(isOwner), catchErrors(updateSession));
-router.put("/session/:id", isValidatedUser, catchErrors(updateSession));
-// router.delete("/session/:id", catchErrors(isOwner), catchErrors(removeSession));
-router.delete("/session/:id", isValidatedUser, catchErrors(removeSession));
+
+router.post(
+  "/session",
+  isValidatedUser,
+  validateAddSession,
+  catchErrors(addSession)
+);
+
+router.put(
+  "/session/:id",
+  isValidatedUser,
+  catchErrors(isOwner),
+  validateUpdateSession,
+  catchErrors(updateSession)
+);
+
+router.delete(
+  "/session/:id",
+  isValidatedUser,
+  catchErrors(isOwner),
+  catchErrors(removeSession)
+);
 
 module.exports = router;

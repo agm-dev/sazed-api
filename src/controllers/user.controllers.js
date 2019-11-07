@@ -1,5 +1,6 @@
 const httpStatus = require("http-status");
 const domain = require("../domain/user.domain");
+const { getQueryOptions } = require("../utils/handlers");
 
 exports.getUserInfoController = (req, res, next) => {
   if (!req.user) {
@@ -9,7 +10,7 @@ exports.getUserInfoController = (req, res, next) => {
 };
 
 exports.getUsersController = async (req, res) => {
-  const result = await domain.get();
+  const result = await domain.get(null, getQueryOptions(req.query));
   res.status(httpStatus.OK).json(result);
 };
 

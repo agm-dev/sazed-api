@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { log } = require("../utils/logger");
 
 const schema = mongoose.Schema({
-  id: {
+  googleId: {
     type: String,
     required: true,
     trim: true,
@@ -48,14 +48,20 @@ const schema = mongoose.Schema({
  */
 schema.statics.findOrCreate = async function findOrCreate(userData) {
   const self = this;
-  const user = await self.findOne({ id: userData.id });
+  const user = await self.findOne({ googleId: userData.id });
   if (user) {
     return user;
   }
 
   const numberOfUsers = await self.countDocuments({});
 
-  const newUserData = Object.assign(userData, {
+  const transformedUserData = {
+    googleId: userData.id,
+    ...userData
+  };
+  delete transformedUserData.id;
+
+  const newUserData = Object.assign(transformedUserData, {
     admin: !numberOfUsers,
     validated: !numberOfUsers
   });
@@ -67,6 +73,18 @@ schema.statics.findOrCreate = async function findOrCreate(userData) {
     { userId: newUser.id }
   );
   return newUser;
+};
+
+// eslint-disable-next-line func-names
+schema.methods.toJSON = function() {
+  const obj = this.toObject();
+  // eslint-disable-next-line no-underscore-dangle
+  delete obj.__v;
+  // eslint-disable-next-line no-underscore-dangle
+  obj.id = obj._id;
+  // eslint-disable-next-line no-underscore-dangle
+  delete obj._id;
+  return obj;
 };
 
 module.exports = mongoose.model("User", schema);
