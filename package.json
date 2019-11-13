@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "nodemon index.js",
-    "prod": "node index.js",
+    "prod": "NODE_ENV=production node index.js",
     "develop": "jest --watch src",
     "test": "jest",
     "test:coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage",
