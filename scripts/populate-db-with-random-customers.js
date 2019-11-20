@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const { connectToDatabase, disconnectDatabase } = require("../src/config/db");
 const Customer = require("../src/models/Customer.model");
+const Session = require("../src/models/Session.model");
 
 const randomNif = () => {
   const numbers = "0123456789".split("");
@@ -27,7 +28,7 @@ const generateRandom = l => set => (initial = "") =>
 // eslint-disable-next-line prettier/prettier
 const birthdates = ["1988-11-07", "1989-10-22", "1993-01-03", "1987-10-04", "2001-01-01", "1995-05-15", "1994-12-16"];
 
-const generateRandomData = () => {
+const generateRandomCustomerData = () => {
   const firstname = randomItem(names);
   const lastname = randomItem(surnames);
   const domain = randomItem(["gmail", "hotmail", "sazed"]);
@@ -47,15 +48,47 @@ const generateRandomData = () => {
   };
 };
 
+const generateRandomDate = (diffDays = 100) => {
+  const now = Date.now();
+  const hoursToMilliseconds = n => 1000 * 60 * 60 * n;
+  const daysToMilliseconds = n => hoursToMilliseconds(24) * n;
+  const randomNumber = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1) + min);
+  const positiveOrNegative = () => {
+    const items = [-1, 1];
+    return items[Math.floor(Math.random() * items.length)];
+  };
+  const randomDiff = () => {
+    const days = randomNumber(1, diffDays - 1) * positiveOrNegative();
+    const hours = randomNumber(1, 23) * positiveOrNegative();
+    return daysToMilliseconds(days) + hoursToMilliseconds(hours);
+  };
+  return new Date(now + randomDiff());
+};
+
+const generateRandomSessionData = customer => {
+  return {
+    date: generateRandomDate(),
+    customer,
+    owner: null, // TODO: read database is the first to get user ids
+    notes: randomItem(["", "blabla blá", "bleble blé"])
+  };
+};
+
+const generateRandomData = async () => {
+  const instance = new Customer(generateRandomCustomerData());
+  await instance.save();
+  const { nif, firstname, lastname } = instance;
+  const customer = { nif, name: `${firstname} ${lastname}` };
+
+  const session = new Session(generateRandomSessionData(customer));
+  return session.save();
+};
+
 const main = async () => {
   await connectToDatabase();
   await Customer.deleteMany({});
-  await Promise.all(
-    [...Array(777)].map(() => {
-      const instance = new Customer(generateRandomData());
-      return instance.save();
-    })
-  );
+  await Promise.all([...Array(777)].map(generateRandomData));
   await disconnectDatabase();
   console.log("finished!");
 };
