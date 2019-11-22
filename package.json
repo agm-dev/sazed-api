@@ -8,13 +8,13 @@
   },
   "scripts": {
     "start": "nodemon index.js",
-    "prod": "node index.js",
+    "prod": "NODE_ENV=production node index.js",
     "develop": "jest --watch src",
     "test": "jest",
     "test:coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "populate:fake": "node scripts/populate-db-with-fake-data.js"
+    "populate:fake": "node scripts/populate-database.js"
   },
   "author": "Adrián Gonzalo",
   "license": "GPL-3.0",
@@ -43,10 +43,13 @@
     "eslint-plugin-prettier": "^3.1.0",
     "husky": "^3.0.5",
     "jest": "^24.9.0",
+    "jsonwebtoken": "^8.5.1",
     "lint-staged": "^9.2.5",
+    "mockingoose": "^2.13.2",
     "mongoose-dummy": "^1.0.8",
     "nodemon": "^1.19.2",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "supertest": "^4.0.2"
   },
   "keywords": [
     "node",

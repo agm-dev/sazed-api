@@ -27,7 +27,7 @@ module.exports = {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_SECRET
       },
-      loginRedirection: "http://localhost:3000/api/",
+      loginRedirection: process.env.LOGIN_REDIRECTION,
       userModel: User
     }
   },
