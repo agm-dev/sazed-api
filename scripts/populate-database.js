@@ -2,6 +2,9 @@
 const { connectToDatabase, disconnectDatabase } = require("../src/config/db");
 const Customer = require("../src/models/Customer.model");
 const Session = require("../src/models/Session.model");
+const User = require("../src/models/User.model");
+
+let generatedSessions = 0;
 
 const randomNif = () => {
   const numbers = "0123456789".split("");
@@ -21,6 +24,10 @@ const names = ["Adrián", "Juan", "Pedro", "Guillermo", "Paula", "Cristina", "Da
 const surnames = ["Gonzalo", "García", "Rodríguez", "Cabrera", "Díaz", "López", "Encinas", "Montejo", "Plasencia", "Rodrigo", "Sánchez", "Contreras", "Casado", "Iglesias"];
 
 const randomItem = set => set[Math.floor(Math.random() * set.length)];
+
+const randomNumber = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
 
 const generateRandom = l => set => (initial = "") =>
   [...Array(l)].reduce(final => `${final}${randomItem(set)}`, initial);
@@ -52,8 +59,6 @@ const generateRandomDate = (diffDays = 100) => {
   const now = Date.now();
   const hoursToMilliseconds = n => 1000 * 60 * 60 * n;
   const daysToMilliseconds = n => hoursToMilliseconds(24) * n;
-  const randomNumber = (min, max) =>
-    Math.floor(Math.random() * (max - min + 1) + min);
   const positiveOrNegative = () => {
     const items = [-1, 1];
     return items[Math.floor(Math.random() * items.length)];
@@ -66,29 +71,53 @@ const generateRandomDate = (diffDays = 100) => {
   return new Date(now + randomDiff());
 };
 
-const generateRandomSessionData = customer => {
+const generateRandomSessionData = (customer, users) => {
+  const randomUser = randomItem(users);
   return {
     date: generateRandomDate(),
     customer,
-    owner: null, // TODO: read database is the first to get user ids
+    owner: randomUser.id,
     notes: randomItem(["", "blabla blá", "bleble blé"])
   };
 };
 
-const generateRandomData = async () => {
+const generateRandomSessions = (customer, users) => {
+  const n = randomNumber(1, 3);
+  generatedSessions += n;
+  return Promise.all(
+    [...Array(n)].map(() => {
+      const session = new Session(generateRandomSessionData(customer, users));
+      return session.save();
+    })
+  );
+};
+
+const generateRandomData = users => async () => {
   const instance = new Customer(generateRandomCustomerData());
   await instance.save();
   const { nif, firstname, lastname } = instance;
   const customer = { nif, name: `${firstname} ${lastname}` };
 
-  const session = new Session(generateRandomSessionData(customer));
-  return session.save();
+  return generateRandomSessions(customer, users);
 };
 
 const main = async () => {
   await connectToDatabase();
-  await Customer.deleteMany({});
-  await Promise.all([...Array(777)].map(generateRandomData));
+  console.log("connected to database");
+
+  await Promise.all([Customer.deleteMany({}), Session.deleteMany({})]);
+  console.log("removed all sessions and customers");
+
+  const users = await User.find({});
+  console.log(`${users.length} users found`);
+
+  const amount = 777;
+  console.log(`generating ${amount} random customers and sessions...`);
+  await Promise.all([...Array(amount)].map(generateRandomData(users)));
+  console.log(
+    `${amount} customers and ${generatedSessions} sessions have been generated`
+  );
+
   await disconnectDatabase();
   console.log("finished!");
 };
