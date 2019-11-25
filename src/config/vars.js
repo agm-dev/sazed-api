@@ -13,6 +13,7 @@ module.exports = {
   port: process.env.PORT || 3000,
   mongo:
     environment === "test" ? process.env.MONGO_URI_TEST : process.env.MONGO_URI,
+  backupDir: join(__dirname, "..", "..", "backups"),
   serverOptions: {
     allowCors: true,
     forceJsonResponse: true,

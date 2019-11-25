@@ -6,3 +6,4 @@
 !index.js
 !src/**
 !.env.example
+!backups/**
