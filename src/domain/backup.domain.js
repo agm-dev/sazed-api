@@ -3,8 +3,11 @@ const { join } = require("path");
 const debug = require("debug")("domain:backup");
 // const { log } = require("../utils/logger");
 const { mongo, backupDir } = require("../config/vars");
+const { rmDirContent } = require("../utils/commands");
 
-exports.generateBackup = () => {
+exports.generateBackup = async () => {
+  await rmDirContent(backupDir, [".gitkeep"]);
+
   const backupFile = join(backupDir, `sazed-${Date.now().toString()}.dump.gz`);
   const uri = `--uri="${mongo}"`;
   const toFile = `--archive=${backupFile}`;
@@ -24,7 +27,7 @@ exports.generateBackup = () => {
       if (code !== 0) {
         reject(code);
       } else {
-        resolve(code);
+        resolve(backupFile);
       }
     });
   });
