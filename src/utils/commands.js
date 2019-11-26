@@ -1,6 +1,7 @@
 const debug = require("debug")("utils:commands");
 const fs = require("fs");
 const { join } = require("path");
+const { spawn } = require("child_process");
 
 const deleteFile = (dir, file) => {
   return new Promise((resolve, reject) => {
@@ -29,6 +30,27 @@ exports.rmDirContent = (dir, excluded = []) => {
               .map(file => deleteFile(dir, file))
           )
         );
+      }
+    });
+  });
+};
+
+exports.mongodump = (mongoUri, file) => {
+  // example: mongodump --uri="mongodb://localhost:27017" --archive="/tmp/test/sazed.dump.gz" --gzip
+  const options = [`--uri="${mongoUri}"`, `--archive="${file}"`, "--gzip"];
+  const mongodump = spawn("mongodump", options);
+
+  return new Promise((resolve, reject) => {
+    mongodump.stderr.on("data", data => {
+      debug(`stderr: ${data.toString()}`);
+    });
+
+    mongodump.on("close", code => {
+      debug(`mongodump exited with code ${code}`);
+      if (code !== 0) {
+        reject(code);
+      } else {
+        resolve(file);
       }
     });
   });
