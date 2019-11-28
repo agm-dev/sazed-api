@@ -14,3 +14,10 @@ exports.generateBackup = async () => {
   debug("generating backup into ", backupFile);
   return mongodump(mongo, backupFile);
 };
+
+exports.restoreBackup = async file => {
+  debug("restoring provided file as database backup");
+  console.log("restoring provided file as database backup");
+  console.log(file);
+  return true;
+};
