@@ -15,7 +15,7 @@ exports.restoreBackup = async (req, res, next) => {
   const { file } = req.body;
   // TODO: check format and name, mimetype, etc
   if (!file) {
-    res.status(httpStatus.BAD_REQUEST).json({
+    return res.status(httpStatus.BAD_REQUEST).json({
       error: "You need to provide a backup file"
     });
   }
