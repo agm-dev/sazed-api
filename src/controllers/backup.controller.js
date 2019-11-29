@@ -12,11 +12,17 @@ exports.downloadBackup = async (req, res) => {
 };
 
 exports.restoreBackup = async (req, res, next) => {
-  const { file } = req.body;
-  // TODO: check format and name, mimetype, etc
+  const { file } = req;
+
   if (!file) {
     return res.status(httpStatus.BAD_REQUEST).json({
       error: "You need to provide a backup file"
+    });
+  }
+
+  if (file.mimetype !== "application/gzip") {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      error: "Invalid file format. Please, provide a valid backup file"
     });
   }
 
