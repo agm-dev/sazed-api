@@ -6,6 +6,7 @@ exports.downloadBackup = async (req, res) => {
   // TODO: send the file as response
   const now = new Date();
   res
+    .set("Content-Type", "application/gzip")
     .status(httpStatus.OK)
     .download(backup, `sazed.${now.toISOString()}.dump.gz`);
 };
