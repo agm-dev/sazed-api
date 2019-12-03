@@ -2,8 +2,8 @@ const httpStatus = require("http-status");
 const domain = require("../domain/backup.domain");
 
 exports.downloadBackup = async (req, res) => {
-  const backup = await domain.generateBackup();
-  // TODO: send the file as response
+  const backup = await domain.generateBackup(req.user);
+
   const now = new Date();
   res
     .set("Content-Type", "application/gzip")
@@ -26,7 +26,7 @@ exports.restoreBackup = async (req, res, next) => {
     });
   }
 
-  const restored = await domain.restoreBackup(file);
+  const restored = await domain.restoreBackup(file, req.user);
 
   // eslint-disable-next-line prettier/prettier
   const status = restored
