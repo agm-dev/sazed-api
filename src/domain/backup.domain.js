@@ -2,7 +2,7 @@ const { join } = require("path");
 const debug = require("debug")("domain:backup");
 // const { log } = require("../utils/logger");
 const { mongo, backupDir } = require("../config/vars");
-const { rmDirContent, mongodump } = require("../utils/commands");
+const { rmDirContent, mongodump, mongorestore } = require("../utils/commands");
 
 exports.generateBackup = async () => {
   debug("removing files from backup dir: ", backupDir);
@@ -16,8 +16,16 @@ exports.generateBackup = async () => {
 };
 
 exports.restoreBackup = async file => {
-  debug("restoring provided file as database backup");
-  console.log("restoring provided file as database backup");
-  console.log(file);
-  return true;
+  debug("restoring provided file as database backup %O", file);
+
+  const { path } = file;
+  if (!path) {
+    throw new Error("no path on restoring backup");
+  }
+
+  const restored = await mongorestore(mongo, path);
+
+  rmDirContent(backupDir, [".gitkeep"]);
+
+  return restored;
 };

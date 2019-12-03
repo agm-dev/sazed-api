@@ -28,13 +28,14 @@ exports.restoreBackup = async (req, res, next) => {
 
   const restored = await domain.restoreBackup(file);
 
+  // eslint-disable-next-line prettier/prettier
   const status = restored
-    ? httpStatus.CREATED
+    ? httpStatus.OK
     : httpStatus.INTERNAL_SERVER_ERROR;
 
   if (!restored) {
     return next(new Error("Something has failed"));
   }
 
-  return res.status(status).json({ message: "OK" });
+  return res.status(status).json({ message: "Your backup has been restored" });
 };

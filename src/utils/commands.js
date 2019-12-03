@@ -55,3 +55,24 @@ exports.mongodump = (mongoUri, file) => {
     });
   });
 };
+
+exports.mongorestore = (mongoUri, file) => {
+  // example: mongodump --uri="mongodb://localhost:27017" --archive="/tmp/test/sazed.dump.gz" --gzip
+  const options = [`--uri="${mongoUri}"`, `--archive="${file}"`, "--gzip"];
+  const command = spawn("mongorestore", options);
+
+  return new Promise((resolve, reject) => {
+    command.stderr.on("data", data => {
+      debug(`stderr: ${data.toString()}`);
+    });
+
+    command.on("close", code => {
+      debug(`mongorestore exited with code ${code}`);
+      if (code !== 0) {
+        reject(code);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+};

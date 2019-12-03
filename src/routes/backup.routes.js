@@ -1,3 +1,4 @@
+const { join } = require("path");
 const multer = require("multer");
 const { createRouter } = require("noswbi");
 const { isAdmin } = require("../utils/middlewares");
@@ -7,7 +8,7 @@ const {
   restoreBackup
 } = require("../controllers/backup.controller");
 
-const upload = multer();
+const upload = multer({ dest: join(__dirname, "..", "..", "backups") });
 
 const router = createRouter({ requireAuth: true });
 
