@@ -55,6 +55,13 @@ const schema = mongoose.Schema({
   }
 });
 
+schema.index({
+  nif: "text",
+  firstname: "text",
+  lastname: "text",
+  email: "text"
+});
+
 // eslint-disable-next-line func-names
 schema.methods.toJSON = function() {
   const obj = this.toObject();

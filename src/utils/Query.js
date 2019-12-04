@@ -43,6 +43,35 @@ class Query {
     };
   }
 
+  async getByText(text, options = {}) {
+    const regex = { $regex: text, $options: "i" };
+    const query = [
+      {
+        $match: {
+          $or: [
+            { $text: { $search: text } },
+            { nif: regex },
+            { firstname: regex },
+            { lastname: regex },
+            { email: regex }
+          ]
+        }
+      }
+    ];
+
+    const sort = options.sort || defaultQuerySort;
+    const limit = options.limit || defaultQueryLimit;
+
+    query.push({ $order: sort });
+    query.push({ $limit: limit });
+
+    debug(`getByText sorted by %O, limited to ${limit} results`, sort);
+
+    const results = await this.Model.aggregate(query);
+
+    return results;
+  }
+
   async add(data) {
     const instance = new this.Model(data);
     await instance.save();
