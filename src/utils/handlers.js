@@ -1,4 +1,21 @@
-exports.catchErrors = fn => (req, res, next) => fn(req, res, next).catch(next);
+const { environment } = require("../config/vars");
+
+// exports.catchErrors = fn => (req, res, next) => fn(req, res, next).catch(next);
+exports.catchErrors = fn => (req, res, next) =>
+  fn(req, res, next).catch(err => {
+    // TODO: temporal till new version of noswbi released
+    if (environment !== "production") {
+      // eslint-disable-next-line no-console
+      console.log("ERROR: ", err);
+      const error = {
+        code: 500,
+        name: "INTERNAL_SERVER_ERROR",
+        message: err.message
+      };
+      return res.status(500).json({ error });
+    }
+    return next(err);
+  });
 
 exports.getQueryOptions = query => {
   const options = {};
