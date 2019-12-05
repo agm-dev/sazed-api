@@ -5,11 +5,17 @@ const { log } = require("../utils/logger");
 
 const query = new Query(Customer);
 
-exports.get = async (id = null, options = {}) => {
-  const customers = await query.get(id, {
+exports.get = async (id = null, options = {}, search = "") => {
+  const queryOptions = {
     sort: { firstname: 1, lastname: 1 },
     ...options
-  });
+  };
+
+  const isSearch = search.length && !id;
+  const method = isSearch ? "getByText" : "get";
+  const queryParams = isSearch ? [search, queryOptions] : [id, queryOptions];
+
+  const customers = await query[method](...queryParams);
   debug(`get: %O`, customers);
   return customers;
 };

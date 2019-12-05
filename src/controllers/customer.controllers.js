@@ -2,9 +2,9 @@ const httpStatus = require("http-status");
 const domain = require("../domain/customer.domain");
 const { getQueryOptions } = require("../utils/handlers");
 
-// make this one?
 exports.getCustomers = async (req, res) => {
-  const customers = await domain.get(null, getQueryOptions(req.query));
+  const { search } = req.query;
+  const customers = await domain.get(null, getQueryOptions(req.query), search);
   res.status(httpStatus.OK).json(customers);
 };
 

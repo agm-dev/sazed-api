@@ -62,14 +62,14 @@ class Query {
     const sort = options.sort || defaultQuerySort;
     const limit = options.limit || defaultQueryLimit;
 
-    query.push({ $order: sort });
+    query.push({ $sort: sort });
     query.push({ $limit: limit });
 
     debug(`getByText sorted by %O, limited to ${limit} results`, sort);
 
     const results = await this.Model.aggregate(query);
 
-    return results;
+    return { data: results };
   }
 
   async add(data) {
