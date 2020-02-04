@@ -9,6 +9,7 @@
   "scripts": {
     "start": "nodemon index.js",
     "prod": "NODE_ENV=production node index.js",
+    "prod:win": "cross-env NODE_ENV=production node index.js",
     "develop": "jest --watch src",
     "test": "jest",
     "test:coverage": "jest --coverage && cat ./coverage/lcov.info | codacy-coverage",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "codacy-coverage": "^3.4.0",
+    "cross-env": "^7.0.0",
     "eslint": "^6.3.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.3.0",
