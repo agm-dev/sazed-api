@@ -68,8 +68,9 @@ class Query {
     debug(`getByText sorted by %O, limited to ${limit} results`, sort);
 
     const results = await this.Model.aggregate(query);
+    const formatted = results.map(i => new this.Model(i).toJSON());
 
-    return { data: results };
+    return { data: formatted };
   }
 
   async add(data) {
